@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký | CarRental</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --primary-glow: rgba(139, 92, 246, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-family: 'Outfit', sans-serif;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+        }
+        .header {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--surface-border);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .nav {
+            display: flex;
+            gap: 1rem;
+        }
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: var(--transition-smooth);
+        }
+        .nav a:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+        .nav a.active { color: var(--text-main); background: var(--surface-border); }
+        .auth-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+        .auth-card {
+            background: var(--surface-color);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            padding: 2.5rem 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
+            animation: cardIn 0.5s ease-out;
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .auth-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+        .auth-card h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .auth-card .sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.75rem;
+        }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+        }
+        .form-group input::placeholder { color: var(--text-muted); opacity: 0.7; }
+        .form-group input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            background: var(--primary-gradient);
+            color: #fff;
+            margin-top: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+        .msg {
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .msg.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            display: block;
+        }
+        .msg.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            display: block;
+        }
+        .auth-links {
+            margin-top: 1.5rem;
+            text-align: center;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--surface-border);
+        }
+        .auth-links a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .auth-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="header-logo">CarRental</a>
+        <nav class="nav">
+            <a href="/">Trang chủ</a>
+            <a href="/views/login">Đăng nhập</a>
+            <a href="/views/register" class="active">Đăng ký</a>
+        </nav>
+    </header>
+    <main class="auth-wrap">
+        <div class="auth-card">
+            <div class="auth-icon">✨</div>
+            <h1>Đăng ký</h1>
+            <p class="sub">Tạo tài khoản để sử dụng hệ thống thuê xe</p>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Họ tên (tùy chọn)</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Nguyễn Văn A" autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu (tối thiểu 6 ký tự)</label>
+                    <input type="password" id="password" name="password" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn-submit">Đăng ký</button>
+                <div id="msg" class="msg"></div>
+            </form>
+            <div class="auth-links">
+                Đã có tài khoản? <a href="/views/login">Đăng nhập</a>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var msg = document.getElementById('msg');
+            msg.className = 'msg';
+            msg.textContent = 'Đang đăng ký...';
+            msg.style.display = 'block';
+            var body = {
+                email: document.getElementById('email').value.trim(),
+                fullName: document.getElementById('fullName').value.trim(),
+                password: document.getElementById('password').value
+            };
+            try {
+                var res = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                var data = await res.json().catch(function() { return {}; });
+                if (res.ok) {
+                    msg.className = 'msg success';
+                    msg.textContent = 'Đăng ký thành công. Đang chuyển...';
+                    localStorage.setItem('token', data.token);
+                    if (data.user) localStorage.setItem('user', JSON.stringify(data.user));
+                    setTimeout(function() { window.location.href = '/views/cars'; }, 800);
+                } else {
+                    msg.className = 'msg error';
+                    msg.textContent = data.message || data.error || 'Đăng ký thất bại';
+                }
+            } catch (err) {
+                msg.className = 'msg error';
+                msg.textContent = 'Lỗi kết nối: ' + err.message;
+            }
+        });
+    </script>
+</body>
+</html>

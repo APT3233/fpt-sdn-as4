@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking quá hạn | CarRental</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.1);
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-family: 'Outfit', sans-serif;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 15% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
+        }
+        .header {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--surface-border);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: var(--transition-smooth);
+        }
+        .nav a:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+        .nav a.active { color: var(--text-main); background: var(--surface-border); }
+        .user-info {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.05);
+        }
+        .user-info span { color: #60a5fa; font-weight: 600; }
+        .btn-logout {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--transition-smooth);
+        }
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.25); color: #fecaca; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .page-title .pill {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        .page-desc {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        .page-desc .muted { color: var(--text-muted); font-size: 0.95rem; }
+        .card-panel {
+            background: var(--surface-color);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .table-wrap { overflow-x: auto; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-border);
+            vertical-align: top;
+        }
+        th {
+            background: rgba(15, 23, 42, 0.8);
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        tr:hover { background: rgba(255, 255, 255, 0.03); }
+        .empty {
+            padding: 2.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .cell-muted { color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="header-logo">CarRental</a>
+        <nav class="nav">
+            <a href="/">Trang chủ</a>
+            <a href="/views/cars">Danh sách xe</a>
+            <a href="/views/bookings">Đặt xe</a>
+            <a href="/views/overdue" class="active">Quá hạn</a>
+            <div class="user-info" id="userInfo"></div>
+            <button type="button" class="btn-logout" id="btnLogout">Đăng xuất</button>
+        </nav>
+    </header>
+    <main class="container">
+        <h1 class="page-title">Booking quá hạn <span class="pill">> 24h & chưa kết thúc</span></h1>
+        <p class="page-desc">Danh sách booking có endDate rỗng và startDate đã quá 24 giờ. Mốc kiểm tra: <span class="muted"><%= new Date(asOf).toLocaleString('vi-VN') %></span></p>
+
+        <div class="card-panel">
+            <% if (!overdueBookings || overdueBookings.length === 0) { %>
+                <div class="empty">Không có booking quá hạn.</div>
+            <% } else { %>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Khách hàng</th>
+                                <th>Biển số xe</th>
+                                <th>Bắt đầu</th>
+                                <th>Kết thúc</th>
+                                <th>Thông tin xe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% function formatDate(d) { if (!d) return '—' ; return new Date(d).toLocaleString('vi-VN', { dateStyle: 'short' , timeStyle: 'short' }); } %>
+                            <% overdueBookings.forEach(function(b) { %>
+                                <tr>
+                                    <td><%= b.customerName || '—' %></td>
+                                    <td><strong><%= b.carNumber || '—' %></strong></td>
+                                    <td><%= formatDate(b.startDate) %></td>
+                                    <td><%= formatDate(b.endDate) %></td>
+                                    <td class="cell-muted">
+                                        <% if (b.car) { %>
+                                            <div><strong>Giá/ngày:</strong> <%= (b.car.pricePerDay != null ? new Intl.NumberFormat('vi-VN').format(b.car.pricePerDay) + ' ₫' : '—') %></div>
+                                            <div><strong>Sức chứa:</strong> <%= (b.car.capacity ?? '—') %> chỗ</div>
+                                            <div><strong>Trạng thái:</strong> <%= (b.car.status ?? '—') %></div>
+                                        <% } else { %>
+                                            Không tìm thấy xe theo carNumber
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
+    </main>
+    <script>
+        (function () {
+            var token = localStorage.getItem('token');
+            if (!token) { window.location.href = '/views/login'; return; }
+            var userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    var user = JSON.parse(userStr);
+                    var el = document.getElementById('userInfo');
+                    if (el) el.innerHTML = '<span>' + (user.email || user.fullName || 'User') + '</span>';
+                } catch (e) {}
+            }
+        })();
+        document.getElementById('btnLogout').addEventListener('click', function () {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/views/login';
+        });
+    </script>
+</body>
+</html>
