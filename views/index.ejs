@@ -1,358 +1,141 @@
-<!DOCTYPE html>
-<html lang="vi">
+<%- include('partials/header', { title: 'Trang Chủ' , activePage: 'home' }) %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ | Hệ thống Thuê xe Premium</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            /* Premium Color Palette */
-            --bg-color: #0f172a;
-            --surface-color: rgba(30, 41, 59, 0.7);
-            --surface-border: rgba(255, 255, 255, 0.1);
-            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            --primary-glow: rgba(139, 92, 246, 0.4);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --card-hover: rgba(51, 65, 85, 0.8);
-
-            /* Typography */
-            --font-family: 'Outfit', sans-serif;
-
-            /* Animations */
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            background-image:
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        /* Glassmorphism Header */
-        .header {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--surface-border);
-            padding: 1.2rem 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .nav {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            padding: 0.5rem 1.2rem;
-            border-radius: 9999px;
-            transition: var(--transition-smooth);
-            position: relative;
-        }
-
-        .nav a:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .nav a.active {
-            color: var(--text-main);
-            background: var(--surface-border);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-        }
-
-        /* Main Content */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 9999px;
-            color: #60a5fa;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .page-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-        }
-
-        .page-title span {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .page-desc {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 4rem;
-            line-height: 1.6;
-        }
-
-        /* Cards Grid */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            width: 100%;
-            max-width: 900px;
-        }
-
-        .card {
-            background: var(--surface-color);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--surface-border);
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            text-decoration: none;
-            color: inherit;
-            text-align: left;
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        /* Glow effect on hover */
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 20px;
-            background: var(--primary-gradient);
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            background: var(--card-hover);
-            border-color: rgba(139, 92, 246, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px var(--primary-glow);
-        }
-
-        .card-icon-wrap {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--surface-border);
-            transition: var(--transition-smooth);
-        }
-
-        .card.cars .card-icon-wrap {
-            color: #60a5fa;
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .card.bookings .card-icon-wrap {
-            color: #f472b6;
-            background: rgba(236, 72, 153, 0.1);
-        }
-
-        .card:hover .card-icon-wrap {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .card p {
-            font-size: 1rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .card-arrow {
-            margin-top: auto;
-            align-self: flex-start;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: #8b5cf6;
-            transition: var(--transition-smooth);
-            opacity: 0.8;
-        }
-
-        .card:hover .card-arrow {
-            gap: 1rem;
-            opacity: 1;
-        }
-
-        /* Custom Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                padding: 1rem 1.5rem;
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .page-title {
-                font-size: 2.5rem;
-            }
-
-            .container {
-                padding: 2rem 1.5rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <header class="header">
-        <div class="header-logo">CarRental</div>
-        <nav class="nav">
-            <a href="/" class="active">Trang chủ</a>
-            <a href="/views/cars">Danh sách xe</a>
-            <a href="/views/bookings">Đặt xe</a>
-            <a href="/views/overdue">Quá hạn</a>
-            <span id="guestNav">
-                <a href="/views/login">Đăng nhập</a>
-                <a href="/views/register">Đăng ký</a>
-            </span>
-            <span id="userNav" style="display:none; align-items:center; gap:0.75rem;">
-                <span style="font-size:0.9rem; color: var(--text-muted); padding: 0.4rem 0.8rem; border-radius: 9999px; background: rgba(255,255,255,0.05);"><span id="userEmail" style="color: #60a5fa; font-weight: 600;"></span></span>
-                <a href="#" id="indexLogout" style="padding: 0.5rem 1rem; border-radius: 9999px; border: 1px solid rgba(239,68,68,0.4); background: rgba(239,68,68,0.15); color: #fca5a5; font-weight: 600; font-size: 0.9rem; text-decoration: none;">Đăng xuất</a>
-            </span>
-        </nav>
-    </header>
-
-    <main class="container">
-        <div class="hero-badge">Hệ thống quản lý v2.0</div>
-        <h1 class="page-title">Trải nghiệm di chuyển<br><span>Hoàn hảo & Tiện lợi</span></h1>
-        <p class="page-desc">Nền tảng quản lý thuê xe hiện đại. Tối ưu hóa vận hành, theo dõi trạng thái xe theo thời
-            gian thực và quản lý các giao dịch đặt xe một cách dễ dàng.</p>
-
-        <div class="cards">
-            <a href="/views/cars" class="card cars">
-                <div class="card-icon-wrap">🚘</div>
-                <h3>Quản lý Garage</h3>
-                <p>Khám phá bộ sưu tập xe đa dạng. Theo dõi thông số, tiện nghi và trạng thái sẵn sàng của toàn bộ
-                    phương tiện trong hệ thống.</p>
-                <div class="card-arrow">Xem danh sách <span>→</span></div>
-            </a>
-
-            <a href="/views/bookings" class="card bookings">
-                <div class="card-icon-wrap">📋</div>
-                <h3>Giao dịch Đặt xe</h3>
-                <p>Tạo và theo dõi các hợp đồng thuê xe. Hệ thống tự động tính toán chi phí minh bạch dưa trên thời gian
-                    sử dụng thực tế.</p>
-                <div class="card-arrow">Quản lý đặt xe <span>→</span></div>
-            </a>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero hero-image">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-badge">🏆 Hệ Thống Quản Lý Xe Hàng Đầu</div>
+                <h1>Car Rental System</h1>
+                <p>Quản lý đội xe và đặt chỗ của bạn một cách thông minh, hiệu quả và chuyên nghiệp.</p>
+                <div class="actions">
+                    <a href="/cars" class="btn btn-primary">🚙 Quản Lý Xe</a>
+                    <a href="/bookings" class="btn btn-outline">📅 Xem Đặt Xe</a>
+                </div>
+            </div>
         </div>
-    </main>
-    <script>
-        (function () {
-            var token = localStorage.getItem('token');
-            var guestNav = document.getElementById('guestNav');
-            var userNav = document.getElementById('userNav');
-            var userEmail = document.getElementById('userEmail');
-            if (token && userNav && guestNav) {
-                guestNav.style.display = 'none';
-                userNav.style.display = 'inline-flex';
-                try {
-                    var user = JSON.parse(localStorage.getItem('user') || '{}');
-                    if (userEmail) userEmail.textContent = user.email || user.fullName || 'User';
-                } catch (e) {}
-            }
-            var logoutBtn = document.getElementById('indexLogout');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    window.location.reload();
-                });
-            }
-        })();
-    </script>
-</body>
 
-</html>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon stat-icon--blue">🚗</div>
+                <div class="stat-info">
+                    <span class="stat-value">
+                        <%= stats.totalCars %>
+                    </span>
+                    <span class="stat-label">Tổng Số Xe</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-icon--green">✅</div>
+                <div class="stat-info">
+                    <span class="stat-value">
+                        <%= stats.availableCars %>
+                    </span>
+                    <span class="stat-label">Xe Sẵn Sàng</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-icon--orange">🔑</div>
+                <div class="stat-info">
+                    <span class="stat-value">
+                        <%= stats.rentedCars %>
+                    </span>
+                    <span class="stat-label">Xe Đang Thuê</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-icon--purple">📋</div>
+                <div class="stat-info">
+                    <span class="stat-value">
+                        <%= stats.totalBookings %>
+                    </span>
+                    <span class="stat-label">Tổng Đặt Xe</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="section-title" style="margin-top: 3rem;">
+            <h2>Tính Năng Nổi Bật</h2>
+            <p>Tất cả những gì bạn cần để quản lý hệ thống thuê xe hiệu quả</p>
+        </div>
+        <div class="grid">
+            <div class="card feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Quản Lý Đội Xe</h3>
+                <p>Theo dõi toàn bộ đội xe của bạn — trạng thái, giá thuê, tính năng và sức chứa theo thời gian thực.
+                </p>
+                <a href="/cars" class="card-link">Xem Xe →</a>
+            </div>
+            <div class="card feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Hệ Thống Đặt Xe</h3>
+                <p>Quản lý đặt chỗ của khách hàng một cách liền mạch, tự động tính toán tổng tiền thuê.</p>
+                <a href="/bookings" class="card-link">Xem Đặt Xe →</a>
+            </div>
+            <div class="card feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Kiểm Tra Xung Đột</h3>
+                <p>Hệ thống tự động phát hiện và ngăn chặn các đặt chỗ trùng lặp cho cùng một xe.</p>
+                <a href="/bookings" class="card-link">Tìm Hiểu →</a>
+            </div>
+        </div>
+
+        <!-- Recent Bookings Preview -->
+        <% if (recentBookings && recentBookings.length> 0) { %>
+            <div class="section-title" style="margin-top: 3rem;">
+                <h2>Đặt Xe Gần Đây</h2>
+                <p>5 giao dịch đặt xe mới nhất trong hệ thống</p>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Khách Hàng</th>
+                            <th>Xe</th>
+                            <th>Ngày Thuê</th>
+                            <th>Ngày Trả</th>
+                            <th>Tổng Tiền</th>
+                            <th>Trạng Thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% recentBookings.forEach(function(booking) { %>
+                            <% const now=new Date(); const start=new Date(booking.startDate); const end=new
+                                Date(booking.endDate); let statusClass='status-available' ; let
+                                statusText='Đang Hoạt Động' ; if (end < now) { statusClass='status-completed' ;
+                                statusText='Hoàn Thành' ; } else if (start> now) {
+                                statusClass = 'status-rented';
+                                statusText = 'Sắp Tới';
+                                }
+                                %>
+                                <tr>
+                                    <td style="font-weight: 500;">👤 <%= booking.customerName %>
+                                    </td>
+                                    <td><code class="car-code"><%= booking.carNumber %></code></td>
+                                    <td>
+                                        <%= new Date(booking.startDate).toLocaleDateString('vi-VN') %>
+                                    </td>
+                                    <td>
+                                        <%= booking.endDate ? new Date(booking.endDate).toLocaleDateString('vi-VN')
+                                            : '—' %>
+                                    </td>
+                                    <td class="amount">
+                                        <%= booking.totalAmount.toLocaleString('vi-VN') %> ₫
+                                    </td>
+                                    <td><span class="status <%= statusClass %>">
+                                            <%= statusText %>
+                                        </span></td>
+                                </tr>
+                                <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: right; margin-top: 1rem;">
+                <a href="/bookings" class="btn btn-action" style="text-decoration:none;">Xem Tất Cả →</a>
+            </div>
+            <% } %>
+    </div>
+
+    <%- include('partials/footer') %>

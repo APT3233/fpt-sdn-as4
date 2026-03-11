@@ -1,401 +1,235 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đặt xe | CarRental</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --surface-color: rgba(30, 41, 59, 0.7);
-            --surface-border: rgba(255, 255, 255, 0.1);
-            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --font-family: 'Outfit', sans-serif;
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --danger: #ef4444;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: var(--font-family);
-            background: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            background-image: radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 15% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
-        }
-        .header {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--surface-border);
-            padding: 1.2rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header-logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
-        }
-        .nav {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-        .nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            transition: var(--transition-smooth);
-        }
-        .nav a:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
-        .nav a.active { color: var(--text-main); background: var(--surface-border); }
-        .user-info {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 9999px;
-            background: rgba(255,255,255,0.05);
-        }
-        .user-info span { color: #60a5fa; font-weight: 600; }
-        .btn-logout {
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            font-family: inherit;
-            transition: var(--transition-smooth);
-        }
-        .btn-logout:hover { background: rgba(239, 68, 68, 0.25); color: #fecaca; }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-        }
-        .page-title {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .page-desc {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
-        .card-panel {
-            background: var(--surface-color);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--surface-border);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        .card-panel h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1.25rem;
-            color: var(--text-main);
-            font-weight: 700;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 0.4rem;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--surface-border);
-            border-radius: 12px;
-            background: rgba(15, 23, 42, 0.5);
-            color: var(--text-main);
-            font-size: 1rem;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #8b5cf6;
-        }
-        .btn {
-            padding: 0.7rem 1.25rem;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-            transition: var(--transition-smooth);
-        }
-        .btn-primary {
-            background: var(--primary-gradient);
-            color: #fff;
-        }
-        .btn-primary:hover { opacity: 0.95; transform: translateY(-1px); }
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.35);
-        }
-        .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
-        .msg {
-            padding: 0.85rem 1rem;
-            border-radius: 12px;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            display: none;
-        }
-        .msg.success {
-            background: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            display: block;
-        }
-        .msg.error {
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            display: block;
-        }
-        .table-wrap { overflow-x: auto; border-radius: 12px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td {
-            padding: 0.9rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--surface-border);
-        }
-        th {
-            background: rgba(15, 23, 42, 0.8);
-            font-weight: 600;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        tr:hover { background: rgba(255, 255, 255, 0.03); }
-        .price {
-            font-weight: 700;
-            color: #a78bfa;
-            white-space: nowrap;
-        }
-        .empty {
-            padding: 2.5rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-    </style>
-</head>
-<body>
-    <header class="header">
-        <a href="/" class="header-logo">CarRental</a>
-        <nav class="nav">
-            <a href="/">Trang chủ</a>
-            <a href="/views/cars">Danh sách xe</a>
-            <a href="/views/bookings" class="active">Đặt xe</a>
-            <a href="/views/overdue">Quá hạn</a>
-            <div class="user-info" id="userInfo"></div>
-            <button type="button" class="btn-logout" id="btnLogout">Đăng xuất</button>
-        </nav>
-    </header>
-    <main class="container">
-        <h2 class="page-title">Đặt xe</h2>
-        <p class="page-desc">Tạo đặt xe mới. Tổng tiền được tính tự động theo số ngày thuê và giá xe (API POST
-            /bookings).</p>
+<%- include('partials/header', { title: 'Quản Lý Đặt Xe' , activePage: 'bookings' }) %>
 
-        <div class="card-panel">
-            <h3>Tạo đặt xe mới</h3>
-            <form id="createForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="customerName">Họ tên khách hàng</label>
-                        <input type="text" id="customerName" name="customerName" required placeholder="Nguyễn Văn A">
-                    </div>
-                    <div class="form-group">
-                        <label for="carNumber">Biển số xe</label>
-                        <input type="text" id="carNumber" name="carNumber" required placeholder="51A-12345">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="startDate">Ngày giờ bắt đầu</label>
-                        <input type="datetime-local" id="startDate" name="startDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate">Ngày giờ kết thúc</label>
-                        <input type="datetime-local" id="endDate" name="endDate" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Tạo đặt xe</button>
-            </form>
-            <div id="formMessage" class="msg"></div>
+    <div class="container">
+        <div class="page-header">
+            <div class="section-title">
+                <h2>📅 Quản Lý Đặt Xe</h2>
+                <p>Xem và quản lý toàn bộ lịch sử đặt thuê xe.</p>
+            </div>
+            <button class="btn btn-action" onclick="openBookingModal()">
+                ➕ Tạo Đặt Xe
+            </button>
         </div>
 
-        <div class="card-panel">
-            <h3>Danh sách đặt xe</h3>
-            <% if (!bookings || bookings.length===0) { %>
-                <div id="empty" class="empty">Chưa có đặt xe nào.</div>
-                <% } else { %>
-                    <div class="table-wrap">
-                        <table id="table">
-                            <thead>
-                                <tr>
-                                    <th>Khách hàng</th>
-                                    <th>Biển số xe</th>
-                                    <th>Bắt đầu</th>
-                                    <th>Kết thúc</th>
-                                    <th>Tổng tiền</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody">
-                                <% function formatPrice(n) { if (n==null || n==='' ) return '—' ; return new
-                                    Intl.NumberFormat('vi-VN', { style: 'currency' , currency: 'VND' }).format(n); }
-                                    function formatDate(d) { if (!d) return '—' ; return new
-                                    Date(d).toLocaleString('vi-VN', { dateStyle: 'short' , timeStyle: 'short' }); }
-                                    bookings.forEach(function(b) { %>
-                                    <tr>
-                                        <td>
-                                            <%= b.customerName || '—' %>
-                                        </td>
-                                        <td><strong>
-                                                <%= b.carNumber || '—' %>
-                                            </strong></td>
-                                        <td>
-                                            <%= formatDate(b.startDate) %>
-                                        </td>
-                                        <td>
-                                            <%= formatDate(b.endDate) %>
-                                        </td>
-                                        <td class="price">
-                                            <%= formatPrice(b.totalAmount) %>
-                                        </td>
-                                        <td style="white-space:nowrap;">
-                                            <button class="btn btn-danger js-del" data-id="<%= b._id %>">Xoá</button>
-                                        </td>
-                                    </tr>
-                                    <% }); %>
-                            </tbody>
-                        </table>
-                    </div>
-                    <% } %>
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="filterBookingStatus">Trạng Thái:</label>
+                <select id="filterBookingStatus" onchange="filterBookings()">
+                    <option value="">Tất Cả</option>
+                    <option value="active">Đang Hoạt Động</option>
+                    <option value="upcoming">Sắp Tới</option>
+                    <option value="completed">Hoàn Thành</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <input type="text" id="searchBooking" placeholder="🔍 Tìm theo tên KH hoặc xe..."
+                    oninput="filterBookings()">
+            </div>
         </div>
-    </main>
-    <script>
-        (function () {
-            var token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = '/views/login';
-                return;
-            }
-            var userStr = localStorage.getItem('user');
-            if (userStr) {
-                try {
-                    var user = JSON.parse(userStr);
-                    var el = document.getElementById('userInfo');
-                    if (el) el.innerHTML = '<span>' + (user.email || user.fullName || 'User') + '</span>';
-                } catch (e) {}
-            }
-        })();
-        document.getElementById('btnLogout').addEventListener('click', function () {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = '/views/login';
-        });
-        function getAuthHeaders() {
-            var t = localStorage.getItem('token');
-            return t ? { 'Authorization': 'Bearer ' + t } : {};
-        }
-        document.getElementById('createForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            var msg = document.getElementById('formMessage');
-            msg.className = 'msg';
-            msg.style.display = 'none';
-            var fd = new FormData(this);
-            var start = fd.get('startDate');
-            var end = fd.get('endDate');
-            var body = {
-                customerName: fd.get('customerName'),
-                carNumber: fd.get('carNumber'),
-                startDate: start ? new Date(start).toISOString() : '',
-                endDate: end ? new Date(end).toISOString() : ''
-            };
-            var headers = Object.assign({ 'Content-Type': 'application/json' }, getAuthHeaders());
-            fetch('/bookings', {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(body)
-            })
-                .then(function (res) { return res.json().then(function (data) { return { res: res, data: data }; }); })
-                .then(function (_ref) {
-                    var res = _ref.res;
-                    var data = _ref.data;
-                    msg.style.display = 'block';
-                    if (res.ok) {
-                        msg.className = 'msg success';
-                        msg.textContent = 'Tạo đặt xe thành công. Tổng tiền: ' + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data.totalAmount) + ' (Đang tải lại trang...).';
-                        setTimeout(() => window.location.reload(), 1000);
-                    } else {
-                        if (res.status === 401) { window.location.href = '/views/login'; return; }
-                        msg.className = 'msg error';
-                        msg.textContent = 'Lỗi: ' + (data.message || data.error || res.status);
-                    }
-                })
-                .catch(function (err) {
-                    msg.className = 'msg error';
-                    msg.textContent = 'Gửi yêu cầu thất bại: ' + err.message;
-                    msg.style.display = 'block';
-                });
-        });
 
-        document.querySelectorAll('.js-del').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var id = this.getAttribute('data-id');
-                if (!id) return;
-                if (!confirm('Xoá booking này?')) return;
-                this.disabled = true;
-                fetch('/bookings/' + encodeURIComponent(id), { method: 'DELETE', headers: getAuthHeaders() })
-                    .then(function (res) { return res.json().then(function (data) { return { res: res, data: data }; }); })
-                    .then(function (_ref2) {
-                        var res = _ref2.res;
-                        var data = _ref2.data;
-                        if (res.ok) {
-                            window.location.reload();
-                        } else {
-                            if (res.status === 401) { window.location.href = '/views/login'; return; }
-                            alert('Lỗi: ' + (data.message || data.error || res.status));
-                            btn.disabled = false;
-                        }
-                    })
-                    .catch(function (err) {
-                        alert('Gửi yêu cầu thất bại: ' + err.message);
-                        btn.disabled = false;
+        <!-- Stats Row -->
+        <div class="mini-stats">
+            <% const now=new Date(); let activeCount=0, upcomingCount=0, completedCount=0; bookings.forEach(b=> {
+                const start = new Date(b.startDate);
+                const end = b.endDate ? new Date(b.endDate) : null;
+                if (!end || end < now) completedCount++; else if (start> now) upcomingCount++;
+                    else activeCount++;
                     });
-            });
-        });
-    </script>
-</body>
+                    const totalRevenue = bookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+                    %>
+                    <span class="mini-stat">
+                        <span class="dot dot--green"></span>
+                        Đang Thuê: <strong>
+                            <%= activeCount %>
+                        </strong>
+                    </span>
+                    <span class="mini-stat">
+                        <span class="dot dot--orange"></span>
+                        Sắp Tới: <strong>
+                            <%= upcomingCount %>
+                        </strong>
+                    </span>
+                    <span class="mini-stat">
+                        <span class="dot dot--gray"></span>
+                        Hoàn Thành: <strong>
+                            <%= completedCount %>
+                        </strong>
+                    </span>
+                    <span class="mini-stat" style="margin-left: auto;">
+                        Doanh Thu: <strong class="text-green">
+                            <%= totalRevenue.toLocaleString('vi-VN') %> ₫
+                        </strong>
+                    </span>
+        </div>
 
-</html>
+        <div class="card-container">
+            <% if (bookings.length===0) { %>
+                <div class="empty-state">
+                    <div class="empty-icon">📅</div>
+                    <h3>Chưa có đặt xe nào</h3>
+                    <p>Bắt đầu bằng cách tạo đặt xe đầu tiên.</p>
+                    <button class="btn btn-action" onclick="openBookingModal()">➕ Tạo Ngay</button>
+                </div>
+            <% } else { %>
+                <div class="card-list" id="bookingCards">
+                    <% bookings.forEach(function(booking, index) { %>
+                        <% const bStart=new Date(booking.startDate);
+                           const bEnd=booking.endDate ? new Date(booking.endDate) : null;
+                           let bStatusClass='status-available';
+                           let bStatusText='Đang Thuê';
+                           let bStatusKey='active';
+                           if (!bEnd || bEnd < now) { bStatusClass='status-completed'; bStatusText='Hoàn Thành'; bStatusKey='completed'; }
+                           else if (bStart> now) { bStatusClass = 'status-rented'; bStatusText = 'Sắp Tới'; bStatusKey = 'upcoming'; }
+                        %>
+                        <div class="booking-card" data-status="<%= bStatusKey %>" data-search="<%= (booking.customerName + ' ' + booking.carNumber).toLowerCase() %>">
+                            <div class="card-header">
+                                <span class="card-index"><%= index+1 %></span>
+                                <span class="status <%= bStatusClass %>"><%= bStatusText %></span>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>KH:</strong> <%= booking.customerName %></p>
+                                <p><strong>Xe:</strong> <code class="car-code"><%= booking.carNumber %></code></p>
+                                <p><strong>Bắt đầu:</strong> <%= new Date(booking.startDate).toLocaleString('vi-VN', {dateStyle:'short', timeStyle:'short'}) %></p>
+                                <p><strong>Kết thúc:</strong> <% if (booking.endDate) { %><%= new Date(booking.endDate).toLocaleString('vi-VN', {dateStyle:'short', timeStyle:'short'}) %><% } else { %><span class="text-muted">Chưa xác định</span><% } %></p>
+                                <p class="amount"><strong>Thành tiền:</strong> <%= booking.totalAmount.toLocaleString('vi-VN') %> ₫</p>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-edit btn-sm" onclick='openEditBookingModal(<%- JSON.stringify(booking) %>)'>✏️ Sửa</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteBooking('<%= booking._id %>', '<%= booking.customerName %>')">🗑️ Xóa</button>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Add/Edit Booking Modal -->
+    <div id="bookingModal" class="modal-overlay" onclick="closeModal('bookingModal')">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="bookingModalTitle">📅 Tạo Đặt Xe Mới</h3>
+                <button class="modal-close" onclick="closeModal('bookingModal')">✕</button>
+            </div>
+            <form id="bookingForm" onsubmit="submitBookingForm(event)">
+                <input type="hidden" id="bookingId" name="bookingId">
+                <div class="form-grid">
+                    <div class="form-group form-group--full">
+                        <label for="bCustomerName">Tên Khách Hàng *</label>
+                        <input type="text" id="bCustomerName" name="customerName" placeholder="Nhập tên khách hàng"
+                            required>
+                    </div>
+                    <div class="form-group form-group--full">
+                        <label for="bCarNumber">Biển Số Xe *</label>
+                        <input type="text" id="bCarNumber" name="carNumber" placeholder="Ví dụ: 51A-12345" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bStartDate">Ngày Bắt Đầu *</label>
+                        <input type="datetime-local" id="bStartDate" name="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bEndDate">Ngày Kết Thúc *</label>
+                        <input type="datetime-local" id="bEndDate" name="endDate" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal('bookingModal')">Hủy</button>
+                    <button type="submit" class="btn btn-action">💾 Lưu Đặt Xe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function filterBookings() {
+            const statusFilter = document.getElementById('filterBookingStatus').value;
+            const searchVal = document.getElementById('searchBooking').value.toLowerCase();
+            document.querySelectorAll('.booking-card').forEach(card => {
+                const matchStatus = !statusFilter || card.dataset.status === statusFilter;
+                const matchSearch = !searchVal || card.dataset.search.includes(searchVal);
+                card.style.display = matchStatus && matchSearch ? '' : 'none';
+            });
+        }
+
+        function openBookingModal() {
+            document.getElementById('bookingModalTitle').textContent = '📅 Tạo Đặt Xe Mới';
+            document.getElementById('bookingForm').reset();
+            document.getElementById('bookingId').value = '';
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function openEditBookingModal(booking) {
+            document.getElementById('bookingModalTitle').textContent = '✏️ Chỉnh Sửa Đặt Xe';
+            document.getElementById('bookingId').value = booking._id;
+            document.getElementById('bCustomerName').value = booking.customerName;
+            document.getElementById('bCarNumber').value = booking.carNumber;
+
+            // Format dates for datetime-local input
+            const toLocal = (dateStr) => {
+                const d = new Date(dateStr);
+                const offset = d.getTimezoneOffset();
+                const local = new Date(d.getTime() - offset * 60000);
+                return local.toISOString().slice(0, 16);
+            };
+            document.getElementById('bStartDate').value = toLocal(booking.startDate);
+            if (booking.endDate) {
+                document.getElementById('bEndDate').value = toLocal(booking.endDate);
+            }
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        async function submitBookingForm(event) {
+            event.preventDefault();
+            const bookingId = document.getElementById('bookingId').value;
+            const isEdit = !!bookingId;
+
+            const payload = {
+                customerName: document.getElementById('bCustomerName').value,
+                carNumber: document.getElementById('bCarNumber').value,
+                startDate: document.getElementById('bStartDate').value,
+                endDate: document.getElementById('bEndDate').value
+            };
+
+            try {
+                const url = isEdit ? `/api/bookings/${bookingId}` : '/api/bookings';
+                const method = isEdit ? 'PUT' : 'POST';
+                const res = await authFetch(url, {
+                    method,
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    showToast(err.message || 'Có lỗi xảy ra', 'error');
+                    return;
+                }
+                showToast(isEdit ? '✅ Cập nhật đặt xe thành công!' : '✅ Tạo đặt xe thành công!', 'success');
+                closeModal('bookingModal');
+                setTimeout(() => location.reload(), 1000);
+            } catch (e) {
+                showToast('❌ Lỗi kết nối máy chủ', 'error');
+            }
+        }
+
+        async function deleteBooking(bookingId, customerName) {
+            if (!confirm(`Bạn có chắc muốn xóa đặt xe của ${customerName}?`)) return;
+            try {
+                const res = await authFetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    const err = await res.json();
+                    showToast(err.message || 'Không thể xóa đặt xe', 'error');
+                    return;
+                }
+                showToast(`✅ Đã xóa đặt xe của ${customerName}`, 'success');
+                setTimeout(() => location.reload(), 1000);
+            } catch (e) {
+                showToast('❌ Lỗi kết nối máy chủ', 'error');
+            }
+        }
+    </script>
+
+    <%- include('partials/footer') %>

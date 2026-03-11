@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Car Rental System - Quản lý thuê xe chuyên nghiệp">
+    <title>
+        <%= title %> - Car Rental System
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="alert"></div>
+
+    <nav class="navbar navbar-dark">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">🚗 <span>CarRental</span></a>
+            <div class="nav-links">
+                <a href="/" class="<%= activePage === 'home' ? 'active' : '' %>">🏠 Trang Chủ</a>
+                <a href="/cars" class="<%= activePage === 'cars' ? 'active' : '' %>">🚙 Xe</a>
+                <a href="/bookings" class="<%= activePage === 'bookings' ? 'active' : '' %>">📅 Đặt Xe</a>
+                <div class="nav-search-wrapper">
+                    <input type="search" class="nav-search" placeholder="Tìm kiếm...">
+                </div>
+            </div>
+            <!-- User Info + Logout -->
+            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <% if (typeof user !=='undefined' && user) { %>
+                    <div class="nav-user">
+                        <div class="nav-user-avatar">
+                            <%= user.name.charAt(0).toUpperCase() %>
+                        </div>
+                        <span class="nav-user-name">
+                            <%= user.name %>
+                        </span>
+                        <span class="nav-user-role">
+                            <%= user.role %>
+                        </span>
+                    </div>
+                    <button class="btn-logout" onclick="logout()">🚪 Đăng Xuất</button>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-action"
+                            style="text-decoration:none; padding: 0.5rem 1rem; font-size: 0.875rem;">🔐 Đăng Nhập</a>
+                        <% } %>
+            </div>
+        </div>
+    </nav>

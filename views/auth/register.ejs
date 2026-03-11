@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Đăng ký tài khoản Car Rental">
+    <title>Đăng Ký - Car Rental System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body class="auth-body auth-register">
+
+    <div class="auth-card">
+        <div class="auth-logo">🚗</div>
+        <h2>Tạo Tài Khoản Mới ✨</h2>
+        <p class="auth-tagline">Điền thông tin bên dưới để bắt đầu sử dụng</p>
+
+        <div id="toast" class="toast" role="alert"></div>
+
+        <form id="registerForm" class="auth-form" novalidate>
+            <div class="form-group">
+                <label for="name">👤 Họ Và Tên</label>
+                <input type="text" id="name" name="name" placeholder="Nguyễn A" autocomplete="name" required>
+                <span class="field-error" id="nameError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">📧 Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                <span class="field-error" id="emailError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">🔑 Mật Khẩu</label>
+                <div class="input-with-toggle">
+                    <input type="password" id="password" name="password" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" required oninput="checkPasswordStrength(this.value)">
+                    <button type="button" class="toggle-password" onclick="togglePassword('password', this)" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
+                </div>
+                <div class="password-strength" id="pwStrength" hidden>
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <span class="strength-label" id="strengthLabel"></span>
+                </div>
+                <span class="field-error" id="passwordError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">🔒 Xác Nhận Mật Khẩu</label>
+                <div class="input-with-toggle">
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" autocomplete="new-password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', this)" aria-label="Hiện/Ẩn">👁️</button>
+                </div>
+                <span class="field-error" id="confirmError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="role">🎭 Vai Trò</label>
+                <select id="role" name="role">
+                    <option value="user">👤 Người Dùng</option>
+                    <option value="admin">👑 Quản Trị Viên (chỉ nếu chưa có admin)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-auth" id="registerBtn">
+                <span class="btn-text">✨ Tạo Tài Khoản</span>
+                <span class="btn-spinner" hidden>⏳</span>
+            </button>
+        </form>
+
+        <div class="auth-divider"><span>hoặc</span></div>
+        <p class="auth-switch">Đã có tài khoản? <a href="/login">Đăng Nhập →</a></p>
+    </div>
+
+    <script>
+        function togglePassword(fieldId, btn) {
+            const input = document.getElementById(fieldId);
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            btn.textContent = isHidden ? '🔒' : '👁️';
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast toast--${type} toast--visible`;
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => { toast.className = 'toast'; }, 3500);
+        }
+
+        function setLoading(loading) {
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = loading;
+            btn.querySelector('.btn-text').hidden = loading;
+            btn.querySelector('.btn-spinner').hidden = !loading;
+        }
+
+        function checkPasswordStrength(pw) {
+            const container = document.getElementById('pwStrength');
+            const fill = document.getElementById('strengthFill');
+            const label = document.getElementById('strengthLabel');
+
+            if (!pw) { container.hidden = true; return; }
+            container.hidden = false;
+
+            let score = 0;
+            if (pw.length >= 6) score++;
+            if (pw.length >= 10) score++;
+            if (/[A-Z]/.test(pw)) score++;
+            if (/[0-9]/.test(pw)) score++;
+            if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+            const levels = [
+                { pct: '20%', color: '#ef4444', text: 'Rất Yếu' },
+                { pct: '40%', color: '#f97316', text: 'Yếu' },
+                { pct: '60%', color: '#eab308', text: 'Trung Bình' },
+                { pct: '80%', color: '#22c55e', text: 'Mạnh' },
+                { pct: '100%', color: '#16a34a', text: 'Rất Mạnh' }
+            ];
+            const level = levels[Math.min(score - 1, 4)] || levels[0];
+            fill.style.width = level.pct;
+            fill.style.background = level.color;
+            label.textContent = level.text;
+            label.style.color = level.color;
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Reset errors
+            ['name', 'email', 'password', 'confirm'].forEach(f => {
+                const el = document.getElementById(f + 'Error');
+                if (el) el.textContent = '';
+            });
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const role = document.getElementById('role').value;
+
+            // Validation
+            let valid = true;
+            if (!name || name.length < 2) {
+                document.getElementById('nameError').textContent = 'Tên phải có ít nhất 2 ký tự.';
+                valid = false;
+            }
+            if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+                document.getElementById('emailError').textContent = 'Email không hợp lệ.';
+                valid = false;
+            }
+            if (!password || password.length < 6) {
+                document.getElementById('passwordError').textContent = 'Mật khẩu phải có ít nhất 6 ký tự.';
+                valid = false;
+            }
+            if (password !== confirmPassword) {
+                document.getElementById('confirmError').textContent = 'Mật khẩu xác nhận không khớp.';
+                valid = false;
+            }
+            if (!valid) return;
+
+            setLoading(true);
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ name, email, password, role })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showToast(data.message || 'Đăng ký thất bại', 'error');
+                    setLoading(false);
+                    return;
+                }
+
+                // Save token
+                localStorage.setItem('jwt_token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                showToast(data.message, 'success');
+                setTimeout(() => { window.location.href = '/'; }, 900);
+            } catch (err) {
+                showToast('❌ Lỗi kết nối máy chủ.', 'error');
+                setLoading(false);
+            }
+        });
+    </script>
+</body>
+
+</html>

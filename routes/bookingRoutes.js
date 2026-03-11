@@ -1,14 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const bookingController = require('../controllers/bookingController');
-const { requireAuth } = require('../middleware/auth');
 
-router.use(requireAuth);
+// Routes for bookings
+router.route('/')
+    .get(bookingController.getAllBookings)
+    .post(bookingController.createBooking);
 
-router.get('/', bookingController.getAllBookings);
-router.get('/overdue', bookingController.getOverdueBookings);
-router.post('/', bookingController.createBooking);
-router.put('/:bookingId', bookingController.updateBooking);
-router.delete('/:bookingId', bookingController.deleteBooking);
+// Route to get overdue bookings
+router.route('/overdue')
+    .get(bookingController.getOverdueBookings);
+
+// Routes for individual booking by ID
+router.route('/:bookingId')
+    .put(bookingController.updateBooking)
+    .delete(bookingController.deleteBooking);
 
 module.exports = router;
