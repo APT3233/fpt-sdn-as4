@@ -186,4 +186,10 @@ async function startServer() {
     }
 }
 
-startServer();
+// Export the app for serverless deployment
+module.exports = app;
+
+// Only start the server if not in a serverless environment
+if (require.main === module) {
+    startServer();
+}
